@@ -1,0 +1,24 @@
+==================================================
+        MUSIC FOLDER STRUCTURE & NAMING RULES
+==================================================
+
+Please follow these guidelines when adding new music to ensure that tracks are generated and formatted correctly.
+
+1. ARTIST FOLDER
+   - Do NOT include spaces in the folder name.
+   - Capitalize the first letter of each word (PascalCase).
+   - Example: Use "RexOrangeCounty" (the generator will automatically format it as "Rex Orange County").
+
+2. ALBUM FOLDER (Optional)
+   - Do NOT include spaces in the album folder name.
+   - Capitalize the first letter of each word (PascalCase).
+   - Example: "ApricotPrincess"
+
+3. LYRICS & SYNCED TEXT (.lrc files)
+   - Make sure your lyrics file (.lrc) has the exact same name as its corresponding audio file.
+   - Example:
+     * Audio file:  "Happiness.flac"
+     * Lyrics file: "Happiness.lrc"
+
+4. GENERATE / REFRESH TRACKS
+   - After adding or renaming folders/songs, run "manage_music.bat" in this directory and select option [1] to update the tracks list automatically.

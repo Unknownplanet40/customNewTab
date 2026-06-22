@@ -1,0 +1,675 @@
+<!doctype html>
+<html lang="en" data-bs-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="/assets/vendors/bootstrap/bootstrap.min.css" rel="stylesheet" />
+    <link href="/assets/fonts/family.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/assets/vendors/bootstrap/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="/assets/css/liquid-glass.css" />
+    <link rel="stylesheet" href="/assets/css/animationKeyframes.css" />
+    <link rel="stylesheet" href="/assets/vendors/sweetalert2/sweetalert2.css" />
+    <link rel="stylesheet" href="/assets/vendors/sweetalert2/sweetalertBootstrap.css" />
+    <title>Settings — Capsss New Tab</title>
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Outfit", sans-serif;
+        width: 340px;
+        min-height: 420px;
+        background: linear-gradient(145deg, #0d0d1a 0%, #1a1a2e 50%, #16213e 100%);
+        color: #fff;
+        padding: 0;
+        overflow-x: hidden;
+      }
+
+      /* Header */
+      .popup-header {
+        padding: 18px 20px 14px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .popup-header img {
+        width: 28px;
+        height: 28px;
+        border-radius: 8px;
+      }
+
+      .popup-header h1 {
+        font-size: 1rem;
+        font-weight: 500;
+        margin: 0;
+        letter-spacing: 0.3px;
+      }
+
+      .popup-header .version-badge {
+        font-size: 0.65rem;
+        font-weight: 300;
+        background: rgba(255, 255, 255, 0.08);
+        padding: 2px 8px;
+        border-radius: 20px;
+        margin-left: auto;
+        color: rgba(255, 255, 255, 0.5);
+      }
+
+      /* Settings Sections */
+      .settings-body {
+        padding: 14px 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .settings-section {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 14px;
+        padding: 14px 16px;
+        animation: fadeInUp 0.8s cubic-bezier(0.25, 0.8, 0.25, 1) 0.1s both;
+      }
+
+      .settings-section:nth-child(2) {
+        animation-delay: 0.2s;
+      }
+
+      .settings-section:nth-child(3) {
+        animation-delay: 0.3s;
+      }
+
+      .settings-section:nth-child(4) {
+        animation-delay: 0.4s;
+      }
+
+      .settings-section-title {
+        font-size: 0.7rem;
+        font-weight: 400;
+        text-transform: uppercase;
+        letter-spacing: 1.2px;
+        color: rgba(255, 255, 255, 0.35);
+        margin-bottom: 10px;
+      }
+
+      .setting-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 0;
+      }
+
+      .setting-row + .setting-row {
+        border-top: 1px solid rgba(255, 255, 255, 0.04);
+      }
+
+      .setting-label {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 0.85rem;
+        font-weight: 300;
+        color: rgba(255, 255, 255, 0.8);
+      }
+
+      .setting-label i {
+        font-size: 1rem;
+        opacity: 0.5;
+        width: 20px;
+        text-align: center;
+      }
+
+      .toggle-switch {
+        position: relative;
+        width: 40px;
+        height: 22px;
+      }
+
+      .toggle-switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+
+      .toggle-slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 22px;
+        transition: background 0.3s ease;
+      }
+
+      .toggle-slider::before {
+        content: "";
+        position: absolute;
+        width: 16px;
+        height: 16px;
+        left: 3px;
+        bottom: 3px;
+        background: rgba(255, 255, 255, 0.6);
+        border-radius: 50%;
+        transition:
+          transform 0.3s ease,
+          background 0.3s ease;
+      }
+
+      .toggle-switch input:checked + .toggle-slider {
+        background: rgba(99, 102, 241, 0.6);
+      }
+
+      .toggle-switch input:checked + .toggle-slider::before {
+        transform: translateX(18px);
+        background: #fff;
+      }
+
+      .setting-select {
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        color: rgba(255, 255, 255, 0.8);
+        font-family: "Outfit", sans-serif;
+        font-size: 0.8rem;
+        font-weight: 300;
+        padding: 4px 10px;
+        outline: none;
+        cursor: pointer;
+        transition: border-color 0.2s ease;
+      }
+
+      .setting-select:focus {
+        border-color: rgba(99, 102, 241, 0.5);
+      }
+
+      .setting-select option {
+        background: #1a1a2e;
+        color: #fff;
+      }
+
+      .popup-footer {
+        padding: 12px 16px;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+        text-align: center;
+        font-size: 0.7rem;
+        font-weight: 300;
+        color: rgba(255, 255, 255, 0.25);
+      }
+
+      .placeholder-note {
+        font-size: 0.75rem;
+        font-weight: 300;
+        color: rgba(255, 255, 255, 0.3);
+        text-align: center;
+        padding: 6px 0;
+        font-style: italic;
+      }
+
+      ::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.12);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 10px;
+        box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: rgba(255, 255, 255, 0.25);
+        border-color: rgba(var(--bs-primary-rgb), 0.4);
+      }
+
+      ::-webkit-scrollbar-thumb:active {
+        background: rgba(var(--bs-primary-rgb), 0.35);
+        border-color: rgba(var(--bs-primary-rgb), 0.6);
+      }
+
+      * {
+        scrollbar-width: thin;
+        scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+      }
+
+      .toggle-switch-sm {
+        position: relative;
+        width: 32px;
+        height: 18px;
+        flex-shrink: 0;
+      }
+      .toggle-switch-sm input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+      .toggle-switch-sm .toggle-slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 18px;
+        transition: background 0.3s ease;
+      }
+      .toggle-switch-sm .toggle-slider::before {
+        content: "";
+        position: absolute;
+        width: 12px;
+        height: 12px;
+        left: 3px;
+        bottom: 3px;
+        background: rgba(255, 255, 255, 0.6);
+        border-radius: 50%;
+        transition:
+          transform 0.3s ease,
+          background 0.3s ease;
+      }
+      .toggle-switch-sm input:checked + .toggle-slider {
+        background: rgba(99, 102, 241, 0.6);
+      }
+      .toggle-switch-sm input:checked + .toggle-slider::before {
+        transform: translateX(14px);
+        background: #fff;
+      }
+
+      .max-height-150 {
+        max-height: 150px;
+      }
+      .max-height-200 {
+        max-height: 200px;
+      }
+      .overflow-y-auto {
+        overflow-y: auto;
+      }
+      .shortcut-editor-item {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        transition:
+          background 0.2s ease,
+          border-color 0.2s ease;
+      }
+      .shortcut-editor-item:hover {
+        background: rgba(255, 255, 255, 0.05);
+        border-color: rgba(255, 255, 255, 0.1);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="popup-header">
+      <img src="./assets/images/mainLogo.png" alt="Logo" />
+      <h1>Capsss New Tab Settings</h1>
+      <span class="version-badge">v1.0</span>
+    </div>
+
+    <div class="settings-body">
+      <div class="settings-section">
+        <div class="settings-section-title">General</div>
+
+        <div class="setting-row">
+          <div class="setting-label">
+            <i class="bi bi-search"></i>
+            <span>Search Engine</span>
+          </div>
+          <select class="setting-select" id="selectSearchEngine">
+            <option value="google" selected>Google</option>
+            <option value="bing">Bing</option>
+            <option value="duckduckgo">DuckDuckGo</option>
+            <option value="youtube">YouTube</option>
+            <option value="grok">Grok</option>
+            <option value="chatgpt" title="Pre-fills the prompt. Press Enter to submit your query.">[Pre-fill Only] ChatGPT</option>
+            <option value="claude" title="Pre-fills the prompt. Press Enter to submit your query.">[Pre-fill Only] Claude</option>
+          </select>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-label">
+            <i class="bi bi-clock"></i>
+            <span>Show Clock & Date</span>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="toggleDateTime" checked />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+        <div id="clockSubSettings" class="d-flex flex-column ms-4 ps-2 gap-2 mt-1 mb-2 border-start" style="border-width: 2px !important; border-color: rgba(255, 255, 255, 0.1) !important">
+          <div class="py-1 setting-row">
+            <div class="setting-label">
+              <i class="bi bi-stopwatch" style="font-size: 0.85rem"></i>
+              <span style="font-size: 0.8rem">Show Seconds</span>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="toggleShowSeconds" checked />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="py-1 setting-row">
+            <div class="setting-label">
+              <i class="bi bi-alarm" style="font-size: 0.85rem"></i>
+              <span style="font-size: 0.8rem">Show Analog Clock</span>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="toggleAnalogClock" checked />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-label">
+            <i class="bi bi-chat-left-text"></i>
+            <span>Show Greeting</span>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="toggleGreeting" checked />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+        <div id="greetingSubSettings" class="d-flex flex-column ms-4 ps-2 gap-2 mt-1 mb-2 border-start" style="border-width: 2px !important; border-color: rgba(255, 255, 255, 0.1) !important">
+          <div class="d-flex flex-column gap-1 w-100">
+            <label for="inputDisplayName" class="text-white-50" style="font-size: 0.75rem">Display Name</label>
+            <input type="text" id="inputDisplayName" class="w-100 setting-select" placeholder="Capsss" style="font-size: 0.8rem; cursor: text; text-align: left" />
+          </div>
+
+          <div class="py-1 setting-row">
+            <div class="setting-label">
+              <i class="bi bi-gift" style="font-size: 0.85rem"></i>
+              <span style="font-size: 0.8rem">Birthday Event Greeting</span>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="toggleBirthday" checked />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="d-flex flex-column gap-1 mt-1 w-100" id="birthdayInputContainer">
+            <label for="inputBirthdate" class="text-white-50" style="font-size: 0.75rem">Your Birthdate</label>
+            <input type="date" id="inputBirthdate" class="w-100 setting-select" style="font-size: 0.8rem; cursor: text; text-align: left; height: 32px" />
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <div class="settings-section-title">Entertainment</div>
+        <div class="d-flex gap-1 align-items-start" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.35)">
+          <i class="bi bi-info-circle" style="margin-top: 1px"></i>
+          <span>API limit 3000 calls renew every month.</span>
+        </div>
+        <small class="text-white-50" style="font-size: 0.65rem">Note: If you don't have an API Key, it will use local quotes.</small>
+
+        <div class="setting-row">
+          <div class="setting-label">
+            <i class="bi bi-cloud-arrow-down"></i>
+            <span>Use Online API</span>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="toggleOnlineApi" />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+        <div id="apiKeyContainer" class="ms-4 ps-2 border-start d-flex flex-column gap-1 mt-1 mb-2" style="border-width: 2px !important; border-color: rgba(255, 255, 255, 0.1) !important">
+          <div class="d-flex flex-column gap-1 w-100">
+            <label for="inputApiKey" class="text-white-50" style="font-size: 0.75rem">API Ninjas Key</label>
+            <input type="password" id="inputApiKey" class="setting-select w-100" placeholder="Enter API Key..." style="font-size: 0.8rem; cursor: text; text-align: left" />
+            <small class="text-white-50" style="font-size: 0.65rem">You can get a free API key from <a href="https://api-ninjas.com/" target="_blank">api-ninjas.com</a></small>
+            <small class="text-white-50" style="font-size: 0.65rem">Your API key is stored locally and never leaves your device.</small>
+          </div>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-label">
+            <i class="bi bi-chat-square-quote"></i>
+            <span>Content Type</span>
+          </div>
+          <select class="setting-select" id="selectContentType">
+            <option value="quotes" selected>Quotes</option>
+            <option value="joke">Jokes</option>
+            <option value="riddle">Riddles</option>
+            <option value="fact">Facts</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <div class="settings-section-title">Appearance</div>
+
+        <div class="setting-row flex-wrap">
+          <div class="w-100 d-flex align-items-center justify-content-between">
+            <div class="setting-label">
+              <i class="bi bi-moon-stars"></i>
+              <span>Dark Mode</span>
+            </div>
+            <label class="toggle-switch" style="opacity: 0.6; cursor: not-allowed">
+              <input type="checkbox" id="toggleDarkMode" checked disabled />
+              <span class="toggle-slider" style="cursor: not-allowed"></span>
+            </label>
+          </div>
+          <div class="w-100 mt-1 d-flex align-items-start gap-1" style="font-size: 0.7rem; color: rgba(255, 193, 7, 0.75)">
+            <i class="bi bi-exclamation-triangle-fill" style="margin-top: 1px"></i>
+            <span>This page is not suitable in light theme. Dark mode is locked.</span>
+          </div>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-label">
+            <i class="bi bi-palette"></i>
+            <span>Glass Tilt Effect</span>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="toggleTilt" checked />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-label">
+            <i class="bi bi-circle"></i>
+            <span>Background Circles</span>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="toggleCircles" checked />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+        <div id="circleSubSettings" class="ms-4 ps-2 border-start d-flex flex-column gap-2 mt-2" style="border-width: 2px !important; border-color: rgba(255, 255, 255, 0.1) !important">
+          <div class="setting-row py-1">
+            <div class="setting-label">
+              <i class="bi bi-palette-fill" style="font-size: 0.85rem"></i>
+              <span style="font-size: 0.8rem">Circle Color Theme</span>
+            </div>
+            <select class="setting-select py-0 px-2" id="selectCircleTheme" style="font-size: 0.75rem; height: 26px">
+              <option value="primary">Primary</option>
+              <option value="success">Success</option>
+              <option value="danger">Danger</option>
+              <option value="warning">Warning</option>
+              <option value="light">Light</option>
+              <option value="dark">Dark</option>
+              <option value="cv" selected>Custom Version</option>
+              <option value="random">Random</option>
+            </select>
+          </div>
+          <div class="setting-row py-1">
+            <div class="setting-label">
+              <i class="bi bi-speedometer2" style="font-size: 0.85rem"></i>
+              <span style="font-size: 0.8rem">Circle Speed</span>
+            </div>
+            <select class="setting-select py-0 px-2" id="selectCircleSpeed" style="font-size: 0.75rem; height: 26px">
+              <option value="slow">Slow</option>
+              <option value="normal" selected>Normal</option>
+              <option value="fast">Fast</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <div class="settings-section-title">Customize Shortcuts</div>
+
+        <div class="border-bottom pb-3 mb-3" style="border-color: rgba(255, 255, 255, 0.08) !important">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="text-white-50" style="font-size: 0.8rem; font-weight: 500">Gmail Main Shortcut</span>
+          </div>
+          <div class="d-flex flex-column gap-2 mb-2 d-none">
+            <div class="d-flex gap-2">
+              <input type="text" id="gmailName" class="setting-select w-50 py-1" placeholder="Gmail Name" style="font-size: 0.75rem; text-align: left; cursor: text" />
+              <input type="text" id="gmailUrl" class="setting-select w-50 py-1" placeholder="URL (Optional)" style="font-size: 0.75rem; text-align: left; cursor: text" />
+            </div>
+            <div class="setting-row py-1">
+              <div class="setting-label">
+                <i class="bi bi-box-arrow-up-right" style="font-size: 0.8rem"></i>
+                <span style="font-size: 0.75rem">Open in New Tab</span>
+              </div>
+              <label class="toggle-switch-sm">
+                <input type="checkbox" id="gmailNewTab" />
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            <div class="setting-row py-1">
+              <div class="setting-label">
+                <i class="bi bi-list-nested" style="font-size: 0.8rem"></i>
+                <span style="font-size: 0.75rem">Enable Dropdown Items</span>
+              </div>
+              <label class="toggle-switch-sm">
+                <input type="checkbox" id="gmailEnableDropdown" checked />
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <div id="gmailDropdownSubSettings" class="ms-3 ps-2 border-start d-flex flex-column gap-2 mt-2" style="border-width: 2px !important; border-color: rgba(255, 255, 255, 0.1) !important">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+              <span class="text-white-50" style="font-size: 0.75rem">Dropdown Accounts</span>
+              <button type="button" id="addGmailDropdownItemBtn" class="btn btn-sm btn-outline-light py-0 px-2" style="font-size: 0.65rem">+ Add</button>
+            </div>
+            <div id="gmailDropdownItemsList" class="d-flex flex-column gap-2 max-height-150 overflow-y-auto pr-1">
+
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="text-white-50" style="font-size: 0.8rem; font-weight: 500">Other Shortcut Sites</span>
+            <button type="button" id="addShortcutBtn" class="btn btn-sm btn-outline-light py-0 px-2 d-none" style="font-size: 0.65rem">+ Add</button>
+          </div>
+          <div id="shortcutsList" class="d-flex flex-column gap-2 max-height-200 overflow-y-auto pr-1">
+
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <div class="settings-section-title">Background Music</div>
+
+        <div class="setting-row">
+          <div class="setting-label">
+            <i class="bi bi-music-note-beamed"></i>
+            <span>Enable Music</span>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="toggleMusicEnabled" />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+        <div
+          id="musicSubSettings"
+          class="ms-4 ps-2 border-start d-flex flex-column gap-3 mt-2"
+          style="border-width: 2px !important; border-color: rgba(255, 255, 255, 0.1) !important; display: none !important"
+        >
+          <div class="setting-row py-1">
+            <div class="setting-label">
+              <i class="bi bi-blockquote-left" style="font-size: 0.85rem"></i>
+              <span style="font-size: 0.8rem">Show Lyrics</span>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="toggleShowLyrics" checked />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="d-flex flex-column gap-1 w-100">
+            <label for="rangeMusicVolume" class="text-white-50 d-flex justify-content-between" style="font-size: 0.75rem">
+              <span>Volume</span>
+              <span id="musicVolumeLabel">40%</span>
+            </label>
+            <input type="range" id="rangeMusicVolume" min="0" max="100" value="40" class="w-100" style="accent-color: rgba(99, 102, 241, 0.8); cursor: pointer" />
+          </div>
+
+          <div class="d-flex flex-column gap-1 w-100">
+            <label for="inputMusicDelay" class="text-white-50" style="font-size: 0.75rem">Start Delay (seconds)</label>
+            <input type="number" id="inputMusicDelay" class="setting-select w-100" min="0" max="300" value="15" placeholder="15" style="font-size: 0.8rem; cursor: text; text-align: left" />
+          </div>
+
+          <div class="d-flex align-items-start gap-1 mb-2" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.35)">
+            <i class="bi bi-info-circle" style="margin-top: 1px"></i>
+            <span>Add .mp3 or .flac files to <code style="color: rgba(99, 102, 241, 0.8)">assets/music/</code> and list them in <code style="color: rgba(99, 102, 241, 0.8)">tracks.json</code>.</span>
+          </div>
+          <div class="p-2 border border-secondary rounded" style="background: rgba(255, 255, 255, 0.02); border-color: rgba(255, 255, 255, 0.1) !important; font-size: 0.75rem">
+            <span class="d-block fw-bold mb-1 text-white-50" style="font-size: 0.75rem"><i class="bi bi-folder2-open"></i> Local Music Tools</span>
+
+            <div class="mb-2 d-flex flex-column gap-1">
+              <span class="text-white-50" style="font-size: 0.65rem">Music Folder Path:</span>
+              <div class="d-flex align-items-center gap-1">
+                <input
+                  type="text"
+                  id="musicDirPathInput"
+                  readonly
+                  class="setting-select w-100 py-0 px-2"
+                  style="font-size: 0.65rem; height: 24px; text-align: left; cursor: pointer; background: rgba(0, 0, 0, 0.2)"
+                  value="Loading path..."
+                />
+                <button type="button" id="copyMusicPathBtn" class="btn btn-sm btn-outline-light py-0 px-2" style="font-size: 0.65rem; height: 24px" title="Copy path">
+                  <i class="bi bi-clipboard"></i>
+                </button>
+              </div>
+            </div>
+
+            <span class="d-block text-white-50 mb-2" style="font-size: 0.7rem"
+              >Run <code class="text-info" style="font-size: 0.7rem">manage_music.bat</code> inside the <code class="text-info" style="font-size: 0.7rem">assets/music/</code> folder to:</span
+            >
+            <ul class="ps-3 mb-0 text-white-50" style="font-size: 0.7rem; list-style-type: disc">
+              <li>Open the music folder</li>
+              <li>Auto-generate <code class="text-warning" style="font-size: 0.7rem">tracks.json</code></li>
+              <li>Manually edit <code class="text-warning" style="font-size: 0.7rem">tracks.json</code></li>
+            </ul>
+          </div>
+          <small class="text-white-50">
+            To open your Music folder instantly:<br />
+            Press <kbd>Win</kbd> + <kbd>R</kbd>, paste the path above, and press <kbd>Enter</kbd>.
+          </small>
+        </div>
+      </div>
+
+      <p class="placeholder-note">More settings coming soon...</p>
+    </div>
+
+    <div class="popup-footer">Made with <i class="bi bi-heart-fill" style="color: rgba(239, 68, 68, 0.6)"></i> by Capsss</div>
+
+    <script src="/assets/vendors/bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="/assets/vendors/sweetalert2/sweetalert2.js"></script>
+    <script type="module" src="popup.js"></script>
+  </body>
+</html>
