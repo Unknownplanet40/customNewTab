@@ -116,3 +116,13 @@ Open the extension's popup window by clicking its icon in the browser toolbar to
 ## License
 
 This project is open-source and available under the [MIT License](LICENSE).
+
+
+## Preview
+![Preview 1](assets/images/Previews/Preview%201.png)
+![Preview 2](assets/images/Previews/Preview%202.png)
+![Preview 3](assets/images/Previews/Preview%203.png)
+![Preview 4](assets/images/Previews/Preview%204.png)
+![Preview 5](assets/images/Previews/Preview%205.png)
+![Preview 6](assets/images/Previews/Preview%206.png)
+![Preview 7](assets/images/Previews/Preview%207.png)
