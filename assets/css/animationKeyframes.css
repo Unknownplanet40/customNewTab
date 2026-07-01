@@ -144,3 +144,43 @@
   0% { opacity: 0; }
   100% { opacity: 0.2; }
 }
+
+@keyframes eggBeat {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  25% {
+    transform: scale(1.2);
+  }
+  50% {
+    transform: scale(0.9);
+  }
+  75% {
+    transform: scale(1.1);
+  }
+}
+
+@keyframes marquee-backforth {
+  0% {
+    transform: translateX(0);
+  }
+  40% {
+    transform: translateX(0);
+  }
+  65% {
+    transform: translateX(calc(-100% - 3em));
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes spinDisc {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

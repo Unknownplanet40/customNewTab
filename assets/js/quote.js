@@ -1,4 +1,6 @@
 export const quotes = [
+  // for easter egg hint, do not remove the first quote
+  "Type the shouted crown with a serpent's triple hiss to uncover the surprise.",
   "Believe you can and you're halfway there.",
   "Act as if what you do makes a difference. It does.",
   "Success is not final, failure is not fatal: it is the courage to continue that counts.",
@@ -168,6 +170,16 @@ export function initQuoteController(useOnline = false, typeOfEntertainment = "qu
 
       fetchFromApi(typeOfEntertainment)
         .done(function (response) {
+          if (!response || response.length === 0) {
+            fallbackToOffline();
+            return;
+          }
+
+          if (typeOfEntertainment === "quotes" && response[0].quote.length > 300) {
+            setContent();
+            return;
+          }
+
           $(".loader").addClass("d-none");
           const htmlContent = formatResponse(typeOfEntertainment, response);
           $quoteText.fadeOut(400, function () {

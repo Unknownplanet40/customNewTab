@@ -454,7 +454,7 @@
       <div class="settings-section">
         <div class="settings-section-title">Appearance</div>
 
-        <div class="setting-row flex-wrap">
+        <div class="setting-row flex-wrap opacity-75 d-none">
           <div class="w-100 d-flex align-items-center justify-content-between">
             <div class="setting-label">
               <i class="bi bi-moon-stars"></i>
@@ -484,16 +484,41 @@
 
         <div class="setting-row">
           <div class="setting-label">
-            <i class="bi bi-circle"></i>
-            <span>Background Circles</span>
+            <i class="bi bi-play-circle"></i>
+            <span>Page Animations</span>
           </div>
           <label class="toggle-switch">
-            <input type="checkbox" id="toggleCircles" checked />
+            <input type="checkbox" id="toggleAnimations" checked />
             <span class="toggle-slider"></span>
           </label>
         </div>
 
-        <div id="circleSubSettings" class="ms-4 ps-2 border-start d-flex flex-column gap-2 mt-2" style="border-width: 2px !important; border-color: rgba(255, 255, 255, 0.1) !important">
+        <div class="setting-row">
+          <div class="setting-label">
+            <i class="bi bi-brightness-auto"></i>
+            <span>Adaptive Text Color</span>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="toggleAdaptiveTextColor" checked />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-label">
+            <i class="bi bi-image"></i>
+            <span>Background Style</span>
+          </div>
+          <select class="setting-select py-0 px-2" id="selectBgStyle" style="font-size: 0.75rem; height: 26px">
+            <option value="circles" selected>Animated Circles</option>
+            <option value="gradient">Color / Gradient</option>
+            <option value="image">Custom Image</option>
+            <option value="slideshow">Wallpaper Slideshow</option>
+            <option value="dynamic">Dynamic Wallpaper</option>
+          </select>
+        </div>
+
+        <div id="circleSubSettings" class="ms-4 ps-2 border-start d-flex flex-column gap-2 mt-2" style="border-width: 2px !important; border-color: rgba(255, 255, 255, 0.1) !important; display: none;">
           <div class="setting-row py-1">
             <div class="setting-label">
               <i class="bi bi-palette-fill" style="font-size: 0.85rem"></i>
@@ -507,7 +532,6 @@
               <option value="light">Light</option>
               <option value="dark">Dark</option>
               <option value="cv" selected>Custom Version</option>
-              <option value="random">Random</option>
             </select>
           </div>
           <div class="setting-row py-1">
@@ -520,6 +544,124 @@
               <option value="normal" selected>Normal</option>
               <option value="fast">Fast</option>
             </select>
+          </div>
+        </div>
+
+        <div id="gradientSubSettings" class="ms-4 ps-2 border-start d-flex flex-column gap-2 mt-2" style="border-width: 2px !important; border-color: rgba(255, 255, 255, 0.1) !important; display: none;">
+          <div class="d-flex flex-column gap-1 w-100">
+            <label for="inputBgGradient" class="text-white-50" style="font-size: 0.75rem">CSS Gradient / Color</label>
+            <input type="text" id="inputBgGradient" class="w-100 setting-select" placeholder="e.g. #ff0000, rgb(0,0,0), or linear-gradient(...)" style="font-size: 0.8rem; cursor: text; text-align: left" />
+          </div>
+        </div>
+
+        <div id="imageSubSettings" class="ms-4 ps-2 border-start d-flex flex-column gap-2 mt-2" style="border-width: 2px !important; border-color: rgba(255, 255, 255, 0.1) !important; display: none;">
+          <div class="d-flex flex-column gap-1 w-100">
+            <label for="inputBgImage" class="text-white-50" style="font-size: 0.75rem">Upload Wallpaper (Max 4MB)</label>
+            <input type="file" id="inputBgImage" accept="image/*" class="w-100 setting-select" style="font-size: 0.8rem" />
+            <button type="button" id="clearBgImageBtn" class="btn btn-sm btn-outline-danger mt-1" style="font-size: 0.75rem">Remove Image</button>
+          </div>
+          <!-- error message container -->
+          <div id="bgImageError" class="mt-1 d-none" style="font-size: 0.75rem;">
+            <i class="bi bi-exclamation-triangle"></i>
+            <span>Image size exceeds 4MB. Please upload a smaller image.</span>
+          </div>
+        </div>
+
+        <div id="slideshowSubSettings" class="ms-4 ps-2 border-start d-flex flex-column gap-2 mt-2" style="border-width: 2px !important; border-color: rgba(255, 255, 255, 0.1) !important; display: none;">
+          <div class="setting-row py-1">
+            <div class="setting-label">
+              <i class="bi bi-clock-history" style="font-size: 0.85rem"></i>
+              <span style="font-size: 0.8rem">Interval (Minutes)</span>
+            </div>
+            <select class="setting-select py-0 px-2" id="selectSlideshowInterval" style="font-size: 0.75rem; height: 26px">
+              <option value="1">1 Minute</option>
+              <option value="5" selected>5 Minutes</option>
+              <option value="15">15 Minutes</option>
+              <option value="60">1 Hour</option>
+            </select>
+          </div>
+          <div class="w-100 mt-1 d-flex align-items-start gap-1" style="font-size: 0.7rem; color: rgba(255, 193, 7, 0.75)">
+            <i class="bi bi-exclamation-triangle-fill opacity-100" style="margin-top: 1px"></i>
+            <span>Images with white or lighter areas are not recommended. Some components may be difficult to see if the image is too bright.</span>
+          </div>
+        </div>
+
+        <div id="dynamicWallpaperSubSettings" class="ms-4 ps-2 border-start d-flex flex-column gap-2 mt-2" style="border-width: 2px !important; border-color: rgba(255, 255, 255, 0.1) !important; display: none;">
+          <div class="setting-row py-1">
+            <div class="setting-label">
+              <i class="bi bi-images" style="font-size: 0.85rem"></i>
+              <span style="font-size: 0.8rem">Dynamic Theme</span>
+            </div>
+            <select class="setting-select py-0 px-2" id="selectDynamicWallpaper" style="font-size: 0.75rem; height: 26px">
+              <option value="RJC_Wallpaper">Loading...</option>
+            </select>
+          </div>
+          <div class="p-2 border border-secondary rounded mt-1" style="background: rgba(255, 255, 255, 0.02); border-color: rgba(255, 255, 255, 0.1) !important; font-size: 0.75rem">
+            <span class="d-block text-white-50 mb-1" style="font-size: 0.7rem">Add dynamic wallpaper folders to <code class="text-info" style="font-size: 0.7rem">assets/images/DynamicWallpapers/</code>.</span>
+            <span class="d-block text-white-50" style="font-size: 0.7rem">Then run <code class="text-info" style="font-size: 0.7rem">manage_wallpapers.bat</code> inside the folder to register them.</span>
+          </div>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-label">
+            <i class="bi bi-cloud-sun"></i>
+            <span>Weather Widget</span>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="toggleWeather" />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div id="weatherSubSettings" class="ms-4 ps-2 border-start d-flex flex-column gap-2 mt-2" style="border-width: 2px !important; border-color: rgba(255, 255, 255, 0.1) !important; display: none;">
+          <div class="setting-row py-1">
+            <div class="setting-label">
+              <i class="bi bi-thermometer-half" style="font-size: 0.85rem"></i>
+              <span style="font-size: 0.8rem">Temperature Unit</span>
+            </div>
+            <select class="setting-select py-0 px-2" id="selectWeatherUnit" style="font-size: 0.75rem; height: 26px">
+              <option value="celsius" selected>Celsius (°C)</option>
+              <option value="fahrenheit">Fahrenheit (°F)</option>
+            </select>
+          </div>
+          <div class="d-flex flex-column gap-1 w-100">
+            <label class="text-white-50" style="font-size: 0.75rem">Manual Location (Optional)</label>
+            <div class="d-flex gap-2">
+              <input type="text" id="inputWeatherLat" class="setting-select w-50 py-1" placeholder="Latitude" style="font-size: 0.75rem; text-align: left; cursor: text" />
+              <input type="text" id="inputWeatherLon" class="setting-select w-50 py-1" placeholder="Longitude" style="font-size: 0.75rem; text-align: left; cursor: text" />
+            </div>
+            <small class="text-white-50" style="font-size: 0.65rem">Leave blank to use auto-geolocation.</small>
+          </div>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-label">
+            <i class="bi bi-battery-charging"></i>
+            <span>Battery Indicator</span>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="toggleBattery" />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-label">
+            <i class="bi bi-calendar-event"></i>
+            <span>Date Countdown</span>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="toggleCountdown" />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div id="countdownSubSettings" class="ms-4 ps-2 border-start d-flex flex-column gap-2 mt-2" style="border-width: 2px !important; border-color: rgba(255, 255, 255, 0.1) !important; display: none;">
+          <div class="d-flex flex-column gap-1 w-100">
+            <label for="inputCountdownName" class="text-white-50" style="font-size: 0.75rem">Event Name</label>
+            <input type="text" id="inputCountdownName" class="w-100 setting-select" placeholder="New Year" style="font-size: 0.8rem; cursor: text; text-align: left" />
+          </div>
+          <div class="d-flex flex-column gap-1 mt-1 w-100">
+            <label for="inputCountdownDate" class="text-white-50" style="font-size: 0.75rem">Target Date & Time</label>
+            <input type="datetime-local" id="inputCountdownDate" class="w-100 setting-select" style="font-size: 0.8rem; height: 32px" />
           </div>
         </div>
       </div>
@@ -564,7 +706,6 @@
               <button type="button" id="addGmailDropdownItemBtn" class="btn btn-sm btn-outline-light py-0 px-2" style="font-size: 0.65rem">+ Add</button>
             </div>
             <div id="gmailDropdownItemsList" class="d-flex flex-column gap-2 max-height-150 overflow-y-auto pr-1">
-
             </div>
           </div>
         </div>
@@ -576,6 +717,53 @@
           </div>
           <div id="shortcutsList" class="d-flex flex-column gap-2 max-height-200 overflow-y-auto pr-1">
 
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <div class="settings-section-title">Screensaver</div>
+
+        <div class="setting-row">
+          <div class="setting-label">
+            <i class="bi bi-display"></i>
+            <span>Enable Screensaver</span>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="toggleScreensaver" />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+        <div id="screensaverSubSettings" class="ms-4 ps-2 border-start d-flex flex-column gap-2 mt-2 d-none" style="border-width: 2px !important; border-color: rgba(255, 255, 255, 0.1) !important">
+          <div class="setting-row py-1">
+            <div class="setting-label">
+              <i class="bi bi-collection-play" style="font-size: 0.85rem"></i>
+              <span style="font-size: 0.8rem">Screensaver Type</span>
+            </div>
+            <select class="setting-select py-0 px-2" id="selectScreensaverType" style="font-size: 0.75rem; height: 26px">
+              <option value="random" selected>Random</option>
+              <option value="matrix">Matrix Rain</option>
+              <option value="dvd">DVD Bouncer</option>
+            </select>
+          </div>
+
+          <div class="setting-row py-1">
+            <div class="setting-label">
+              <i class="bi bi-hourglass-split" style="font-size: 0.85rem"></i>
+              <span style="font-size: 0.8rem">Idle Time</span>
+            </div>
+            <select class="setting-select py-0 px-2" id="selectScreensaverIdle" style="font-size: 0.75rem; height: 26px">
+              <option value="1">1 Minute</option>
+              <option value="5" selected>5 Minutes</option>
+              <option value="15">15 Minutes</option>
+              <option value="30">30 Minutes</option>
+            </select>
+          </div>
+
+          <div class="d-flex align-items-start gap-1" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.35)">
+            <i class="bi bi-info-circle" style="margin-top: 1px"></i>
+            <span>Screensaver activates after the selected idle time. Move your mouse or press any key to dismiss it.</span>
           </div>
         </div>
       </div>
@@ -596,8 +784,8 @@
 
         <div
           id="musicSubSettings"
-          class="ms-4 ps-2 border-start d-flex flex-column gap-3 mt-2"
-          style="border-width: 2px !important; border-color: rgba(255, 255, 255, 0.1) !important; display: none !important"
+          class="ms-4 ps-2 border-start d-flex flex-column gap-3 mt-2 d-none"
+          style="border-width: 2px !important; border-color: rgba(255, 255, 255, 0.1) !important;"
         >
           <div class="setting-row py-1">
             <div class="setting-label">

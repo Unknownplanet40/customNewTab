@@ -79,8 +79,8 @@ export function initSearchController() {
       const min = now.getMinutes();
       const sec = now.getSeconds();
 
-      const hrRotation = (hr * 30) + (min * 0.5);
-      const minRotation = (min * 6) + (sec * 0.1);
+      const hrRotation = hr * 30 + min * 0.5;
+      const minRotation = min * 6 + sec * 0.1;
       const secRotation = sec * 6;
 
       $hourHand.css("transform", `rotate(${hrRotation}deg)`);
@@ -322,6 +322,17 @@ export function initSearchController() {
       return;
     }
 
+    if (!navigator.onLine) {
+      const $errorEl = $("<div>").addClass("suggestion-item-error text-body").text("No internet connection. Suggestions are unavailable.");
+      $suggestionsBox.empty().append($errorEl).removeClass("d-none");
+      setTimeout(() => {
+        $errorEl.fadeOut(500, function () {
+          hideSuggestions();
+        });
+      }, 3000);
+      return;
+    }
+
     const encodedQuery = encodeURIComponent(query);
     const url = `https://suggestqueries.google.com/complete/search?client=chrome&q=${encodedQuery}&hl=en`;
 
@@ -475,7 +486,5 @@ export function initSearchController() {
       // DuckDuckGo expects action "https://duckduckgo.com/" and q="query"
       // it works automatically with method="get" and q in name
     }
-
-
   });
 }

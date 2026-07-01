@@ -4,6 +4,11 @@
 @import url(assets/vendors/bootstrap/bootstrap.min.css);
 @import url(assets/css/animationKeyframes.css);
 
+html {
+  overflow: auto;
+  scrollbar-width: none; /* Firefox */
+}
+
 .loader {
   display: block;
   --height-of-loader: 4px;
@@ -38,8 +43,6 @@ body {
     border-color 0.3s ease;
   border-radius: 30px !important;
   overflow: visible !important;
-  animation: fadeIn 0.8s cubic-bezier(0.25, 0.8, 0.25, 1) both;
-  animation-delay: 0.5s;
 }
 
 .search-box::before,
@@ -67,7 +70,7 @@ body {
   margin: 2px 8px;
   width: calc(100% - 16px);
   font-family: "Outfit", sans-serif;
-  color: rgba(255, 255, 255, 0.8) !important;
+  color: rgba(var(--bs-body-color-rgb), 0.8) !important;
   background: transparent !important;
 }
 
@@ -75,7 +78,7 @@ body {
 #engineDropdownList .dropdown-item.active {
   background: rgba(var(--bs-primary-rgb), 0.35) !important;
   transform: translateX(4px);
-  color: #fff !important;
+  color: var(--bs-body-color) !important;
 }
 
 .search-wrapper {
@@ -102,7 +105,7 @@ body {
     background-color 0.2s ease,
     padding-left 0.2s cubic-bezier(0.25, 0.8, 0.25, 1),
     color 0.2s ease;
-  color: rgba(255, 255, 255, 0.75);
+  color: rgba(var(--bs-body-color-rgb), 0.75);
   border-radius: 12px;
   margin: 4px 8px;
   width: calc(100% - 16px);
@@ -120,7 +123,7 @@ body {
     background-color 0.2s ease,
     padding-left 0.2s cubic-bezier(0.25, 0.8, 0.25, 1),
     color 0.2s ease;
-  color: rgba(255, 255, 255, 0.75);
+  color: rgba(var(--bs-body-color-rgb), 0.75);
   border-radius: 12px;
   margin: 4px 8px;
   width: calc(100% - 16px);
@@ -133,8 +136,8 @@ body {
 
 .suggestion-item:hover,
 .suggestion-item.active {
-  background: rgba(255, 255, 255, 0.08) !important;
-  color: #fff !important;
+  background: rgba(var(--bs-body-color-rgb), 0.08) !important;
+  color: var(--bs-body-color) !important;
   padding-left: 24px;
 }
 
@@ -158,7 +161,6 @@ body {
 
 .greeting-container {
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  animation: fadeInDown 0.8s cubic-bezier(0.25, 0.8, 0.25, 1) both;
   cursor: default;
 }
 
@@ -168,7 +170,6 @@ body {
   object-fit: contain;
   filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.3));
   transition: transform 0.3s ease;
-  animation: fadeInLeft 0.8s cubic-bezier(0.25, 0.8, 0.25, 1) 0.15s both;
   cursor: pointer;
 }
 
@@ -177,7 +178,6 @@ body {
 }
 
 .clock-container {
-  animation: fadeInDown 0.8s cubic-bezier(0.25, 0.8, 0.25, 1) 0.15s both;
   cursor: default;
 }
 
@@ -235,24 +235,7 @@ body {
     background-color 0.3s ease,
     border-color 0.3s ease,
     box-shadow 0.3s ease;
-  animation: fadeInUp 0.8s cubic-bezier(0.25, 0.8, 0.25, 1) 0.1s both;
   border-radius: 50% !important;
-}
-
-.shortcut-item:nth-child(1) {
-  animation-delay: 1.2s;
-}
-.shortcut-item:nth-child(2) {
-  animation-delay: 1s;
-}
-.shortcut-item:nth-child(3) {
-  animation-delay: 0.8s;
-}
-.shortcut-item:nth-child(4) {
-  animation-delay: 1s
-}
-.shortcut-item:nth-child(5) {
-  animation-delay: 1.2s;
 }
 
 .shortcut-item i {
@@ -273,8 +256,8 @@ body {
 
 .shortcut-item:hover {
   transform: translateY(-4px);
-  background: rgba(255, 255, 255, 0.15) !important;
-  border-color: rgba(255, 255, 255, 0.3) !important;
+  background: rgba(var(--bs-body-color-rgb), 0.15) !important;
+  border-color: rgba(var(--bs-body-color-rgb), 0.3) !important;
   box-shadow:
     0 8px 16px rgba(0, 0, 0, 0.2),
     var(--lg-shadow) !important;
@@ -313,7 +296,7 @@ body {
 
   /* Enhanced visibility against other glass elements */
   background: rgba(var(--bs-body-bg-rgb), 0.25) !important;
-  border: 1px solid rgba(255, 255, 255, 0.35) !important;
+  border: 1px solid rgba(var(--bs-body-color-rgb), 0.35) !important;
   box-shadow:
     0 15px 35px rgba(0, 0, 0, 0.5),
     var(--lg-shadow) !important;
@@ -364,7 +347,7 @@ body {
   font-family: "Outfit", sans-serif;
   font-size: 0.85rem;
   font-weight: 300;
-  color: rgba(255, 255, 255, 0.8) !important;
+  color: rgba(var(--bs-body-color-rgb), 0.8) !important;
   white-space: nowrap;
   transition:
     background-color 0.2s ease,
@@ -373,9 +356,9 @@ body {
 }
 
 .shortcut-dropdown-item:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(var(--bs-body-color-rgb), 0.1);
   padding-left: 18px;
-  color: #fff !important;
+  color: var(--bs-body-color);
 }
 
 .shortcut-dropdown-item i {
@@ -398,16 +381,16 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(var(--bs-body-color-rgb), 0.12);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(var(--bs-body-color-rgb), 0.15);
   border-radius: 10px;
   box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.25);
+  background: rgba(var(--bs-body-color-rgb), 0.25);
   border-color: rgba(var(--bs-primary-rgb), 0.4);
 }
 
@@ -418,16 +401,15 @@ body {
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+  scrollbar-color: rgba(var(--bs-body-color-rgb), 0.15) transparent;
 }
 
 .search-input::placeholder {
-  color: rgba(255, 255, 255, 0.795);
+  color: rgba(var(--bs-body-color-rgb), 0.795);
   font-weight: 200;
 }
 
 .quote-container {
-  animation: fadeInUp 0.8s cubic-bezier(0.25, 0.8, 0.25, 1) 0.3s both;
   pointer-events: none;
   max-width: 400px;
 }
@@ -449,12 +431,14 @@ body {
   opacity: 1;
   transform: scale(1.02);
   text-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
-  transition: opacity 0.3s ease, color 0.3s ease,
-    transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), text-shadow 0.3s ease;
+  transition:
+    opacity 0.3s ease,
+    color 0.3s ease,
+    transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1),
+    text-shadow 0.3s ease;
 }
 
 .now-playing-bar {
-  animation: fadeInUp 0.6s cubic-bezier(0.25, 0.8, 0.25, 1) both;
   pointer-events: none;
   opacity: 0;
   transform: translateY(12px);
@@ -471,6 +455,24 @@ body {
   pointer-events: auto;
 }
 
+.now-playing-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background-size: cover;
+  background-position: center right;
+  background-repeat: no-repeat;
+  mask-image: linear-gradient(to right, transparent 0%, black 75%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 75%);
+  transition: background-image 0.6s ease;
+  opacity: 0.35;
+  min-width: 128px;
+}
+
+
+
 .now-playing-icon {
   position: relative;
   width: 28px;
@@ -479,12 +481,33 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(var(--bs-body-color-rgb), 0.5);
 }
 
 .now-playing-icon > i {
   font-size: 1rem;
   transition: opacity 0.3s ease;
+}
+
+.now-playing-cover-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  animation: spinDisc 8s linear infinite;
+  animation-play-state: paused;
+}
+
+.now-playing-cover-img:hover {
+  transform: scale(1.05);
+  transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.now-playing-bar.audio-active .now-playing-cover-img {
+  animation-play-state: running;
 }
 
 .now-playing-bars {
@@ -498,11 +521,11 @@ body {
   cursor: pointer;
 }
 
-.now-playing-bar.visible .now-playing-bars {
+.now-playing-bar.audio-active .now-playing-bars {
   display: flex;
 }
 
-.now-playing-bar.visible .now-playing-icon > i {
+.now-playing-bar.audio-active .now-playing-icon > i {
   opacity: 0;
 }
 
@@ -528,10 +551,8 @@ body {
   animation-delay: 0.4s;
 }
 
-
 .now-playing-text {
   overflow: hidden;
-  max-width: 200px;
 }
 
 .now-playing-text.paused {
@@ -546,11 +567,16 @@ body {
   font-family: "Outfit", sans-serif;
   font-size: 1rem;
   font-weight: 400;
-  color: rgba(255, 255, 255, 0.85);
+  color: rgba(var(--bs-body-color-rgb), 0.85);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  transition:all 0.3s ease;
 }
 
 .now-playing-title.marquee {
@@ -562,11 +588,16 @@ body {
   font-family: "Outfit", sans-serif;
   font-size: 0.85rem;
   font-weight: 300;
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(var(--bs-body-color-rgb), 0.7);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  transition:all 0.3s ease;
 }
 
 .now-playing-bar.now-playing-error .now-playing-bars span {
@@ -627,6 +658,16 @@ body {
 
 .now-playing-content {
   cursor: pointer;
+  min-width: 140px;
+}
+
+@media (max-width: 768px) {
+  .now-playing-content {
+    min-width: 0;
+  }
+  .now-playing-bg {
+    display: none !important;
+  }
 }
 
 .now-playing-controls {
@@ -635,7 +676,7 @@ body {
   right: 24px;
   margin-bottom: 5px;
   border-radius: 16px;
-  padding: 8px 16px;
+  padding: 4px 16px;
   display: flex;
   align-items: center;
   gap: 16px;
@@ -665,7 +706,9 @@ body {
   font-size: 1.1rem;
   padding: 4px 8px;
   cursor: pointer;
-  transition: color 0.2s ease, transform 0.2s ease;
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -688,8 +731,8 @@ body {
   animation-play-state: paused;
 }
 
-.select-Divider{
-  color: rgba(255, 255, 255, 0.5);
+.select-Divider {
+  color: rgba(var(--bs-body-color-rgb), 0.5);
   font-size: 0.7rem;
   font-weight: 900;
   text-transform: uppercase;
@@ -704,29 +747,23 @@ body {
   height: 90px;
   border-radius: 50% !important;
   position: absolute;
-  border: 1px solid rgba(255, 255, 255, 0.15) !important;
-  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(var(--bs-body-color-rgb), 0.15) !important;
+  background: rgba(var(--bs-body-color-rgb), 0.05) !important;
   backdrop-filter: blur(20px) saturate(200%) !important;
   -webkit-backdrop-filter: blur(20px) saturate(200%) !important;
   box-shadow: var(--lg-shadow) !important;
   margin-top: 10px;
-  display: none;
 }
 
 .analog-clock.below-time {
-  top: 85px;
+  top: 110px;
   right: 23px;
-  animation: fadeInRight 0.8s cubic-bezier(0.25, 0.8, 0.25, 1) both;
-  animation-delay: 0.2s;
 }
 
 .analog-clock.no-digital {
   top: 15px;
   right: 23px;
-  animation: fadeInRight 0.8s cubic-bezier(0.25, 0.8, 0.25, 1) both;
-  animation-delay: 0.2s;
 }
-
 
 @media (max-width: 768px) {
   .analog-clock {
@@ -780,4 +817,289 @@ body {
   height: 36px;
   background: rgba(var(--bs-primary-rgb), 0.9);
   margin-left: -0.5px;
+}
+
+/* Global rule to disable all transitions and animations when pageAnimations is turned off */
+body.no-animations *,
+body.no-animations *::before,
+body.no-animations *::after {
+  transition: none !important;
+  animation: none !important;
+}
+
+/* Keyboard Hints Modal */
+.keyboard-hints-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+kbd {
+  font-family: monospace;
+  font-size: 0.8rem;
+}
+
+.text-white-20 {
+  color: rgba(var(--bs-body-color-rgb), 0.2);
+}
+
+.bg-white-10 {
+  background: rgba(var(--bs-body-color-rgb), 0.08);
+}
+
+.border-white-10 {
+  border-color: rgba(var(--bs-body-color-rgb), 0.1) !important;
+}
+
+.countdown-name-wrapper {
+  overflow: hidden;
+  max-width: 100px;
+  width: 100%;
+}
+
+#countdownName.marquee {
+  display: inline-block;
+  white-space: nowrap;
+  animation: marquee-backforth 20s linear infinite;
+}
+
+.beating-icon {
+  animation: eggBeat 1s infinite;
+}
+
+.now-playing-controls {
+  position: absolute;
+  bottom: 100%;
+  right: 24px;
+  margin-bottom: 5px;
+  border-radius: 16px;
+  padding: 4px 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1),
+    visibility 0.3s;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(12px);
+  visibility: hidden;
+  z-index: 5;
+  width: max-content;
+}
+
+.now-playing-controls.visible {
+  opacity: 0.95;
+  transform: translateY(0);
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.control-btn {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.1rem;
+  padding: 4px 8px;
+  cursor: pointer;
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.control-btn:hover {
+  color: var(--bs-body-color);
+  transform: scale(1.15);
+}
+
+.control-btn:active {
+  transform: scale(0.95);
+}
+
+.now-playing-bar.controls-visible .now-playing-lyrics {
+  bottom: calc(100% + 50px);
+}
+
+.now-playing-bars.paused span {
+  animation-play-state: paused;
+}
+
+.select-Divider {
+  color: rgba(var(--bs-body-color-rgb), 0.5);
+  font-size: 0.7rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  margin: 8px 0;
+  text-align: center;
+  text-shadow: none;
+}
+
+.analog-clock {
+  width: 90px;
+  height: 90px;
+  border-radius: 50% !important;
+  position: absolute;
+  border: 1px solid rgba(var(--bs-body-color-rgb), 0.15) !important;
+  background: rgba(var(--bs-body-color-rgb), 0.05) !important;
+  backdrop-filter: blur(20px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(200%) !important;
+  box-shadow: var(--lg-shadow) !important;
+  margin-top: 10px;
+}
+
+.analog-clock.below-time {
+  top: 110px;
+  right: 23px;
+}
+
+.analog-clock.no-digital {
+  top: 15px;
+  right: 23px;
+}
+
+@media (max-width: 768px) {
+  .analog-clock {
+    display: none !important;
+  }
+}
+
+.clock-face {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.clock-center {
+  width: 6px;
+  height: 6px;
+  background: rgb(var(--bs-body-color-rgb), 0.9);
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+}
+
+.hand {
+  position: absolute;
+  bottom: 50%;
+  left: 50%;
+  transform-origin: bottom center;
+  border-radius: 4px;
+  z-index: 5;
+}
+
+.hour-hand {
+  width: 3px;
+  height: 22px;
+  background: rgba(var(--bs-body-color-rgb), 0.85);
+  margin-left: -1.5px;
+}
+
+.minute-hand {
+  width: 2px;
+  height: 32px;
+  background: rgba(var(--bs-body-color-rgb), 0.65);
+  margin-left: -1px;
+}
+
+.second-hand {
+  width: 1px;
+  height: 36px;
+  background: rgba(var(--bs-primary-rgb), 0.9);
+  margin-left: -0.5px;
+}
+
+/* Global rule to disable all transitions and animations when pageAnimations is turned off */
+body.no-animations *,
+body.no-animations *::before,
+body.no-animations *::after {
+  transition: none !important;
+  animation: none !important;
+}
+
+/* Keyboard Hints Modal */
+.keyboard-hints-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+kbd {
+  font-family: monospace;
+  font-size: 0.8rem;
+}
+
+.text-white-20 {
+  color: rgba(var(--bs-body-color-rgb), 0.2);
+}
+
+.bg-white-10 {
+  background: rgba(var(--bs-body-color-rgb), 0.08);
+}
+
+.border-white-10 {
+  border-color: rgba(var(--bs-body-color-rgb), 0.1) !important;
+}
+
+.countdown-name-wrapper {
+  overflow: hidden;
+  max-width: 100px;
+  width: 100%;
+}
+
+#countdownName.marquee {
+  display: inline-block;
+  white-space: nowrap;
+  animation: marquee-backforth 20s linear infinite;
+}
+
+.beating-icon {
+  animation: eggBeat 1s infinite;
+}
+
+/* Adaptive Text Color (Light Backgrounds) - Specific Elements Only */
+body.theme-light-bg #clock,
+body.theme-light-bg #date,
+body.theme-light-bg #greeting,
+body.theme-light-bg #weatherWidget,
+body.theme-light-bg #batteryWidget,
+body.theme-light-bg .shortcut-dropdown-item {
+  color: #1a1a2e !important;
+  text-shadow: 0 1px 3px rgba(255, 255, 255, 0.8) !important;
+}
+
+body.theme-light-bg .shortcut-dropdown-item i {
+  color: #1a1a2e !important;
+  opacity: 0.8;
+}
+
+body.theme-light-bg .hour-hand {
+  background: rgba(26, 26, 46, 0.85) !important;
+}
+
+body.theme-light-bg .minute-hand {
+  background: rgba(26, 26, 46, 0.65) !important;
+}
+
+body.theme-light-bg .clock-center {
+  background: rgba(26, 26, 46, 0.65) !important;
 }

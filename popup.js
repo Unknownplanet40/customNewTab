@@ -9,20 +9,26 @@ if (typeof chrome === "undefined" || !chrome.storage || !chrome.storage.local) {
         try {
           const val = localStorage.getItem(keys);
           result[keys] = val !== null ? JSON.parse(val) : undefined;
-        } catch(e) { result[keys] = undefined; }
+        } catch (e) {
+          result[keys] = undefined;
+        }
       } else if (Array.isArray(keys)) {
         keys.forEach((key) => {
           try {
             const val = localStorage.getItem(key);
             result[key] = val !== null ? JSON.parse(val) : undefined;
-          } catch(e) { result[key] = undefined; }
+          } catch (e) {
+            result[key] = undefined;
+          }
         });
       } else if (typeof keys === "object") {
         Object.keys(keys).forEach((key) => {
           try {
             const val = localStorage.getItem(key);
             result[key] = val !== null ? JSON.parse(val) : keys[key];
-          } catch(e) { result[key] = keys[key]; }
+          } catch (e) {
+            result[key] = keys[key];
+          }
         });
       }
       setTimeout(() => callback(result), 0);
@@ -31,15 +37,15 @@ if (typeof chrome === "undefined" || !chrome.storage || !chrome.storage.local) {
       Object.keys(items).forEach((key) => {
         try {
           localStorage.setItem(key, JSON.stringify(items[key]));
-        } catch(e) {}
+        } catch (e) {}
       });
       if (callback) {
         setTimeout(callback, 0);
       }
-    }
+    },
   };
   chrome.storage.onChanged = {
-    addListener: function () {}
+    addListener: function () {},
   };
 }
 
@@ -58,18 +64,45 @@ document.addEventListener("DOMContentLoaded", () => {
     { id: "inputApiKey", key: "apiNinjaKey", type: "input", default: "" },
     { id: "selectContentType", key: "contentType", type: "select", default: "quotes" },
     { id: "toggleTilt", key: "tilt", type: "checkbox", default: true },
-    { id: "toggleCircles", key: "circles", type: "checkbox", default: true },
+    { id: "toggleAnimations", key: "pageAnimations", type: "checkbox", default: true },
+    { id: "toggleAdaptiveTextColor", key: "adaptiveTextColor", type: "checkbox", default: true },
+    { id: "selectBgStyle", key: "bgStyle", type: "select", default: "circles" },
     { id: "selectCircleTheme", key: "circleTheme", type: "select", default: "cv" },
     { id: "selectCircleSpeed", key: "circleSpeed", type: "select", default: "normal" },
+    { id: "inputBgGradient", key: "bgGradient", type: "input", default: "linear-gradient(135deg, #0f2027, #203a43, #2c5364)" },
+    { id: "selectSlideshowInterval", key: "slideshowInterval", type: "select", default: "5" },
+    { id: "selectDynamicWallpaper", key: "dynamicWallpaperFolder", type: "select", default: "RJC_Wallpaper" },
+    { id: "toggleWeather", key: "weatherEnabled", type: "checkbox", default: false },
+    { id: "selectWeatherUnit", key: "weatherUnit", type: "select", default: "celsius" },
+    { id: "inputWeatherLat", key: "manualWeatherLat", type: "input", default: "" },
+    { id: "inputWeatherLon", key: "manualWeatherLon", type: "input", default: "" },
+    { id: "toggleBattery", key: "batteryEnabled", type: "checkbox", default: false },
+    { id: "toggleCountdown", key: "countdownEnabled", type: "checkbox", default: false },
+    { id: "inputCountdownName", key: "countdownName", type: "input", default: "New Year" },
+    { id: "inputCountdownDate", key: "countdownDate", type: "input", default: "" },
     { id: "toggleMusicEnabled", key: "musicEnabled", type: "checkbox", default: false },
     { id: "toggleShowLyrics", key: "showLyrics", type: "checkbox", default: true },
     { id: "inputMusicDelay", key: "musicDelay", type: "input", default: "15" },
+    { id: "toggleScreensaver", key: "screensaverEnabled", type: "checkbox", default: false },
+    { id: "selectScreensaverType", key: "screensaverType", type: "select", default: "random" },
+    { id: "selectScreensaverIdle", key: "screensaverIdle", type: "select", default: "5" },
   ];
 
-  const toggleCirclesEl = document.getElementById("toggleCircles");
+  const selectBgStyleEl = document.getElementById("selectBgStyle");
   const circleSubSettings = document.getElementById("circleSubSettings");
   const selectCircleThemeEl = document.getElementById("selectCircleTheme");
   const selectCircleSpeedEl = document.getElementById("selectCircleSpeed");
+  const gradientSubSettings = document.getElementById("gradientSubSettings");
+  const imageSubSettings = document.getElementById("imageSubSettings");
+  const slideshowSubSettings = document.getElementById("slideshowSubSettings");
+  const dynamicWallpaperSubSettings = document.getElementById("dynamicWallpaperSubSettings");
+  const inputBgImageEl = document.getElementById("inputBgImage");
+  const clearBgImageBtn = document.getElementById("clearBgImageBtn");
+
+  const toggleWeatherEl = document.getElementById("toggleWeather");
+  const weatherSubSettings = document.getElementById("weatherSubSettings");
+  const toggleCountdownEl = document.getElementById("toggleCountdown");
+  const countdownSubSettings = document.getElementById("countdownSubSettings");
 
   const toggleOnlineApiEl = document.getElementById("toggleOnlineApi");
   const apiKeyContainer = document.getElementById("apiKeyContainer");
@@ -94,20 +127,54 @@ document.addEventListener("DOMContentLoaded", () => {
   const musicVolumeLabelEl = document.getElementById("musicVolumeLabel");
   const inputMusicDelayEl = document.getElementById("inputMusicDelay");
 
+  const toggleScreensaverEl = document.getElementById("toggleScreensaver");
+  const screensaverSubSettings = document.getElementById("screensaverSubSettings");
+
   // --- Visibility helpers ---
-  function updateCircleSubSettingsVisibility() {
-    if (toggleCirclesEl && circleSubSettings) {
-      const isEnabled = toggleCirclesEl.checked;
-      circleSubSettings.style.display = isEnabled ? "flex" : "none";
-      if (selectCircleThemeEl) selectCircleThemeEl.disabled = !isEnabled;
-      if (selectCircleSpeedEl) selectCircleSpeedEl.disabled = !isEnabled;
+  function toggleFlexClass(el, isVisible) {
+    if (!el) return;
+    if (isVisible) {
+      el.classList.remove("d-none");
+      el.classList.add("d-flex");
+    } else {
+      el.classList.remove("d-flex");
+      el.classList.add("d-none");
+    }
+  }
+
+  function updateBackgroundSettingsVisibility() {
+    if (selectBgStyleEl) {
+      const style = selectBgStyleEl.value;
+      toggleFlexClass(circleSubSettings, style === "circles");
+      toggleFlexClass(gradientSubSettings, style === "gradient");
+      toggleFlexClass(imageSubSettings, style === "image");
+      toggleFlexClass(slideshowSubSettings, style === "slideshow");
+      toggleFlexClass(dynamicWallpaperSubSettings, style === "dynamic");
+    }
+  }
+
+  function updateWeatherSettingsVisibility() {
+    if (toggleWeatherEl && weatherSubSettings) {
+      toggleFlexClass(weatherSubSettings, toggleWeatherEl.checked);
+    }
+  }
+
+  function updateCountdownSettingsVisibility() {
+    if (toggleCountdownEl && countdownSubSettings) {
+      toggleFlexClass(countdownSubSettings, toggleCountdownEl.checked);
+    }
+  }
+
+  function updateScreensaverSettingsVisibility() {
+    if (toggleScreensaverEl && screensaverSubSettings) {
+      toggleFlexClass(screensaverSubSettings, toggleScreensaverEl.checked);
     }
   }
 
   function updateApiSettingsState() {
     if (toggleOnlineApiEl) {
       const isOnline = toggleOnlineApiEl.checked;
-      if (apiKeyContainer) apiKeyContainer.style.display = isOnline ? "flex" : "none";
+      toggleFlexClass(apiKeyContainer, isOnline);
       if (inputApiKeyEl) inputApiKeyEl.disabled = !isOnline;
       if (selectContentTypeEl) {
         selectContentTypeEl.disabled = !isOnline;
@@ -119,7 +186,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function updateGreetingSettingsState() {
     if (toggleGreetingEl) {
       const isGreetingEnabled = toggleGreetingEl.checked;
-      if (greetingSubSettings) greetingSubSettings.style.display = isGreetingEnabled ? "flex" : "none";
+      toggleFlexClass(greetingSubSettings, isGreetingEnabled);
       if (inputDisplayNameEl) inputDisplayNameEl.disabled = !isGreetingEnabled;
       if (toggleBirthdayEl) toggleBirthdayEl.disabled = !isGreetingEnabled;
       updateBirthdayInputState();
@@ -129,15 +196,74 @@ document.addEventListener("DOMContentLoaded", () => {
   function updateBirthdayInputState() {
     if (toggleBirthdayEl && toggleGreetingEl) {
       const isBirthdayEnabled = toggleBirthdayEl.checked && toggleGreetingEl.checked;
-      if (birthdayInputContainer) birthdayInputContainer.style.display = isBirthdayEnabled ? "flex" : "none";
+      toggleFlexClass(birthdayInputContainer, isBirthdayEnabled);
       if (inputBirthdateEl) inputBirthdateEl.disabled = !isBirthdayEnabled;
     }
+  }
+
+  // File reader for custom background image
+  if (inputBgImageEl) {
+    inputBgImageEl.addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      if (file.size > 4 * 1024 * 1024) {
+        document.getElementById("bgImageError").classList.remove("d-none");
+        document.getElementById("bgImageError").classList.remove("text-primary");
+        document.getElementById("bgImageError").classList.add("text-danger");
+        document.getElementById("bgImageError").textContent = "Image size exceeds 4MB. Please upload a smaller image.";
+        setTimeout(() => {
+          document.getElementById("bgImageError").classList.add("d-none");
+          document.getElementById("bgImageError").classList.remove("text-danger");
+          document.getElementById("bgImageError").classList.add("text-primary");
+          document.getElementById("bgImageError").textContent = "Wallpaper uploaded successfully!";
+        }, 2000);
+        inputBgImageEl.value = "";
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function (event) {
+        const dataUrl = event.target.result;
+        chrome.storage.local.set({ customBgImage: dataUrl }, () => {
+          document.getElementById("bgImageError").classList.remove("d-none");
+          document.getElementById("bgImageError").classList.remove("text-danger");
+          document.getElementById("bgImageError").classList.add("text-success");
+          document.getElementById("bgImageError").textContent = "Wallpaper uploaded successfully!";
+          setTimeout(() => {
+            document.getElementById("bgImageError").classList.add("d-none");
+            document.getElementById("bgImageError").classList.remove("text-success");
+            document.getElementById("bgImageError").classList.add("text-danger");
+            document.getElementById("bgImageError").textContent = "Image size exceeds 4MB. Please upload a smaller image.";
+          }, 2000);
+        });
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  if (clearBgImageBtn) {
+    clearBgImageBtn.addEventListener("click", () => {
+      chrome.storage.local.remove("customBgImage", () => {
+        if (inputBgImageEl) inputBgImageEl.value = "";
+        document.getElementById("bgImageError").classList.remove("d-none");
+        document.getElementById("bgImageError").classList.remove("text-danger");
+        document.getElementById("bgImageError").classList.add("text-primary");
+        document.getElementById("bgImageError").textContent = "Wallpaper removed successfully!";
+        setTimeout(() => {
+          document.getElementById("bgImageError").classList.add("d-none");
+          document.getElementById("bgImageError").classList.remove("text-primary");
+          document.getElementById("bgImageError").classList.add("text-danger");
+          document.getElementById("bgImageError").textContent = "Image size exceeds 4MB. Please upload a smaller image.";
+        }, 2000);
+      });
+    });
   }
 
   function updateClockSettingsState() {
     if (toggleDateTimeEl && clockSubSettings) {
       const isClockEnabled = toggleDateTimeEl.checked;
-      clockSubSettings.style.display = isClockEnabled ? "flex" : "none";
+      toggleFlexClass(clockSubSettings, isClockEnabled);
       if (toggleShowSecondsEl) toggleShowSecondsEl.disabled = !isClockEnabled;
     }
   }
@@ -145,7 +271,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function updateMusicSettingsState() {
     if (toggleMusicEl && musicSubSettings) {
       const isMusicEnabled = toggleMusicEl.checked;
-      musicSubSettings.style.display = isMusicEnabled ? "flex" : "none";
+      toggleFlexClass(musicSubSettings, isMusicEnabled);
       if (rangeMusicVolumeEl) rangeMusicVolumeEl.disabled = !isMusicEnabled;
       if (inputMusicDelayEl) inputMusicDelayEl.disabled = !isMusicEnabled;
       if (toggleShowLyricsEl) toggleShowLyricsEl.disabled = !isMusicEnabled;
@@ -160,12 +286,11 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // --- Shortcuts & Gmail Handling ---
   const defaultShortcuts = [
-    { name: "GitHub", url: "https://github.com", openInNewTab: false, iconType: "bootstrap", iconValue: "bi-github" },
     { name: "YouTube", url: "https://youtube.com", openInNewTab: false, iconType: "bootstrap", iconValue: "bi-youtube text-danger" },
-    { name: "YTS", url: "https://yts.gg/home", openInNewTab: false, iconType: "image", iconValue: "assets/images/shortcuts/yts_x32.png" },
-    { name: "TBP CL", url: "https://tbcpl.lol/", openInNewTab: false, iconType: "image", iconValue: "assets/images/shortcuts/tbcp.png" },
+      { name: "GitHub", url: "https://github.com", openInNewTab: false, iconType: "bootstrap", iconValue: "bi-github" },
+      { name: "Facebook", url: "https://facebook.com", openInNewTab: false, iconType: "bootstrap", iconValue: "bi-facebook text-primary" },
+      { name: "Instagram", url: "https://instagram.com", openInNewTab: false, iconType: "bootstrap", iconValue: "bi-instagram" },
   ];
 
   const defaultGmailSettings = {
@@ -176,11 +301,11 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const defaultGmailDropdownItems = [
-    { name: "Personal Account", url: "https://mail.google.com/mail/u/0/#inbox", openInNewTab: false },
+    { name: "Primary Account", url: "https://mail.google.com/mail/u/0/#inbox", openInNewTab: false },
     { name: "Secondary Account", url: "https://mail.google.com/mail/u/1/#inbox", openInNewTab: false },
-    { name: "Cvsu Account", url: "https://mail.google.com/mail/u/3/#inbox", openInNewTab: false },
-    { name: "Dump Account", url: "https://mail.google.com/mail/u/4/#inbox", openInNewTab: false },
-    { name: "Gmail Account 3", url: "https://mail.google.com/mail/u/2/#inbox", openInNewTab: false },
+    { name: "Tertiary Account", url: "https://mail.google.com/mail/u/3/#inbox", openInNewTab: false },
+    { name: "Quaternary Account", url: "https://mail.google.com/mail/u/4/#inbox", openInNewTab: false },
+    { name: "Quinary Account", url: "https://mail.google.com/mail/u/2/#inbox", openInNewTab: false },
   ];
 
   const gmailNameEl = document.getElementById("gmailName");
@@ -311,7 +436,10 @@ document.addEventListener("DOMContentLoaded", () => {
     renderGmailDropdownItems();
     updateGmailDropdownSubSettingsVisibility();
 
-    updateCircleSubSettingsVisibility();
+    updateBackgroundSettingsVisibility();
+    updateWeatherSettingsVisibility();
+    updateCountdownSettingsVisibility();
+    updateScreensaverSettingsVisibility();
     updateApiSettingsState();
     updateGreetingSettingsState();
     updateClockSettingsState();
@@ -327,7 +455,10 @@ document.addEventListener("DOMContentLoaded", () => {
         const val = setting.type === "checkbox" ? el.checked : el.value;
         chrome.storage.local.set({ [setting.key]: val });
 
-        if (setting.id === "toggleCircles") updateCircleSubSettingsVisibility();
+        if (setting.id === "selectBgStyle") updateBackgroundSettingsVisibility();
+        else if (setting.id === "toggleWeather") updateWeatherSettingsVisibility();
+        else if (setting.id === "toggleCountdown") updateCountdownSettingsVisibility();
+        else if (setting.id === "toggleScreensaver") updateScreensaverSettingsVisibility();
         else if (setting.id === "toggleOnlineApi") updateApiSettingsState();
         else if (setting.id === "toggleGreeting") updateGreetingSettingsState();
         else if (setting.id === "toggleBirthday") updateBirthdayInputState();
@@ -495,5 +626,36 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       }
     });
+  }
+
+  const selectDynamicWallpaperEl = document.getElementById("selectDynamicWallpaper");
+  if (selectDynamicWallpaperEl) {
+    fetch("assets/images/DynamicWallpapers/folders.json")
+      .then((res) => res.json())
+      .then((data) => {
+        selectDynamicWallpaperEl.innerHTML = "";
+        if (data.wallpapers && data.wallpapers.length > 0) {
+          data.wallpapers.forEach((wp) => {
+            const option = document.createElement("option");
+            option.value = wp.folder;
+            option.textContent = wp.config.displayName || wp.folder;
+            selectDynamicWallpaperEl.appendChild(option);
+          });
+          // Restore selected value
+          chrome.storage.local.get(["dynamicWallpaperFolder"], function(res) {
+            if (res.dynamicWallpaperFolder) {
+              selectDynamicWallpaperEl.value = res.dynamicWallpaperFolder;
+            }
+          });
+        } else {
+          const option = document.createElement("option");
+          option.value = "";
+          option.textContent = "No dynamic wallpapers found";
+          selectDynamicWallpaperEl.appendChild(option);
+        }
+      })
+      .catch(() => {
+        selectDynamicWallpaperEl.innerHTML = "<option value=''>Error loading folders.json</option>";
+      });
   }
 });

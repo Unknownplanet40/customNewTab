@@ -53,6 +53,51 @@ function main() {
       lyricsRelPath = path.relative(MUSIC_DIR, lrcPathLocal).replace(/\\/g, '/');
     }
 
+    // Determine cover image path (fallback: look for cover.jpg/png in current dir or artist parent dir)
+    const imgExts = ['.jpg', '.jpeg', '.png'];
+    let coverRelPath = null;
+
+    // 1. Look for matching song image name: e.g. "Happiness.jpg"
+    for (const imgExt of imgExts) {
+      const imgPathLocal = filePath.slice(0, -ext.length) + imgExt;
+      if (fs.existsSync(imgPathLocal)) {
+        coverRelPath = path.relative(MUSIC_DIR, imgPathLocal).replace(/\\/g, '/');
+        break;
+      }
+    }
+
+    // 2. Look for "cover.ext" or "folder.ext" in the immediate song directory
+    if (!coverRelPath) {
+      const songDir = path.dirname(filePath);
+      const possibleNames = ['cover', 'folder', 'album'];
+      for (const name of possibleNames) {
+        for (const imgExt of imgExts) {
+          const imgPathLocal = path.join(songDir, name + imgExt);
+          if (fs.existsSync(imgPathLocal)) {
+            coverRelPath = path.relative(MUSIC_DIR, imgPathLocal).replace(/\\/g, '/');
+            break;
+          }
+        }
+        if (coverRelPath) break;
+      }
+    }
+
+    // 3. Look for "cover.ext" or "folder.ext" in the artist parent directory (if nested inside an album subfolder)
+    if (!coverRelPath && relPath.split('/').length > 2) {
+      const artistDir = path.join(MUSIC_DIR, relPath.split('/')[0]);
+      const possibleNames = ['cover', 'folder', 'album'];
+      for (const name of possibleNames) {
+        for (const imgExt of imgExts) {
+          const imgPathLocal = path.join(artistDir, name + imgExt);
+          if (fs.existsSync(imgPathLocal)) {
+            coverRelPath = path.relative(MUSIC_DIR, imgPathLocal).replace(/\\/g, '/');
+            break;
+          }
+        }
+        if (coverRelPath) break;
+      }
+    }
+
     // Try to determine artist and title
     let artist = 'Unknown Artist';
     let title = cleanName(baseWithoutExt);
@@ -76,7 +121,8 @@ function main() {
       file: relPath,
       title: title,
       artist: artist,
-      lyrics: lyricsRelPath
+      lyrics: lyricsRelPath,
+      cover: coverRelPath
     });
   });
 

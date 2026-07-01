@@ -106,9 +106,42 @@ export function initMusicController(settings = {}) {
         artist: track.artist || "Unknown Artist",
         status: isPlaying ? "playing" : "paused",
         playing: true,
+        cover: track.cover || null,
       },
     });
     window.dispatchEvent(event);
+
+    // Update Media Session API for OS media controls
+    if ("mediaSession" in navigator) {
+      try {
+        const baseMetadata = {
+          title: track.title || "Unknown",
+          artist: track.artist || "Unknown Artist",
+          artwork: []
+        };
+
+        if (track.cover) {
+          const fullUrl = chrome.runtime.getURL(`assets/music/${track.cover}`);
+          fetch(fullUrl)
+            .then(r => r.blob())
+            .then(blob => {
+              const blobUrl = URL.createObjectURL(blob);
+              navigator.mediaSession.metadata = new MediaMetadata({
+                ...baseMetadata,
+                artwork: [{ src: blobUrl, sizes: "512x512", type: blob.type || "image/jpeg" }]
+              });
+            })
+            .catch(() => {
+              // Fallback: set metadata without artwork
+              navigator.mediaSession.metadata = new MediaMetadata(baseMetadata);
+            });
+        } else {
+          navigator.mediaSession.metadata = new MediaMetadata(baseMetadata);
+        }
+      } catch (e) {
+        console.error("Error setting MediaSession metadata:", e);
+      }
+    }
   }
 
   function dispatchStopped() {
@@ -293,7 +326,7 @@ export function initMusicController(settings = {}) {
     });
   }
 
-  return {
+  const controller = {
     setVolume(vol) {
       targetVolume = Math.min(1, Math.max(0, vol));
       if (audio && !audio.paused && !audio.ended) {
@@ -358,4 +391,23 @@ export function initMusicController(settings = {}) {
       playTrack(currentTrackIndex);
     }
   };
+
+  // Bind Media Session action handlers to the controller methods
+  if ("mediaSession" in navigator) {
+    try {
+      navigator.mediaSession.setActionHandler("play", () => {
+        controller.togglePlayPause();
+      });
+      navigator.mediaSession.setActionHandler("pause", () => {
+        controller.togglePlayPause();
+      });
+      navigator.mediaSession.setActionHandler("nexttrack", () => {
+        controller.next();
+      });
+    } catch (e) {
+      console.error("Error binding MediaSession action handlers:", e);
+    }
+  }
+
+  return controller;
 }
